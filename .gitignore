@@ -1,0 +1,11 @@
+# Gradle files
+.gradle/
+/build/
+app/build/
+
+# Local configuration
+local.properties
+.idea/
+
+# Logs
+*.log
