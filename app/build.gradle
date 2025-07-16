@@ -5,6 +5,7 @@ plugins {
 
 android {
     compileSdk 33
+    namespace "com.example.roadcamera"
 
     defaultConfig {
         applicationId "com.example.roadcamera"

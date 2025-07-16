@@ -9,3 +9,5 @@ local.properties
 
 # Logs
 *.log
+
+gradle/wrapper/gradle-wrapper.jar
