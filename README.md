@@ -38,3 +38,21 @@ app/
 ```
 
 Further modules will be added for camera processing, GPS logging and map generation.
+
+## Building from the command line
+
+This repository keeps binary files out, so the Gradle wrapper JAR is not included.
+Run the Gradle wrapper to generate it along with the wrapper scripts:
+
+```
+gradle wrapper
+```
+
+Then build the debug APK:
+
+```
+./gradlew assembleDebug
+```
+
+The output APK will be written to `app/build/outputs/apk/debug/`.
+
