@@ -1,0 +1,21 @@
+<resources>
+    <string-array name="theme_entries">
+        <item>An System anpassen</item>
+        <item>Lightmode</item>
+        <item>Darkmode</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <string-array name="speed_source_entries">
+        <item>per Kamera erkennen</item>
+        <item>online fetchen</item>
+    </string-array>
+    <string-array name="speed_source_values">
+        <item>camera</item>
+        <item>online</item>
+    </string-array>
+</resources>

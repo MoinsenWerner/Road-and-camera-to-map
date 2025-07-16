@@ -1,9 +1,15 @@
 package com.example.roadcamera
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.TextView
+import android.view.View
+import androidx.preference.PreferenceManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -17,11 +23,28 @@ import com.google.android.gms.location.LocationServices
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private lateinit var tvSpeed: TextView
+    private lateinit var tvSpeedLimit: TextView
+    private lateinit var onlineIndicator: View
+    private lateinit var syncManager: MapSyncManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        syncManager = MapSyncManager(this)
+
+        tvSpeed = findViewById(R.id.tvSpeed)
+        tvSpeedLimit = findViewById(R.id.tvSpeedLimit)
+        onlineIndicator = findViewById(R.id.onlineIndicator)
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val syncEnabled = prefs.getBoolean("pref_sync_enabled", true)
+        val wifiOnly = prefs.getBoolean("pref_sync_wifi_only", false)
+        if (syncEnabled) {
+            syncManager.scheduleSync(wifiOnly)
+        }
 
         val requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -66,5 +89,27 @@ class MainActivity : ComponentActivity() {
 
     private fun handleLocation(location: Location) {
         // TODO: update UI with current speed and record location for map building
+        val speedKmh = location.speed * 3.6f
+        tvSpeed.text = String.format("%.1f km/h", speedKmh)
+    }
+
+    fun updateSpeedLimit(limit: Int, fromOnline: Boolean) {
+        tvSpeedLimit.text = limit.toString()
+        onlineIndicator.visibility = if (fromOnline) View.VISIBLE else View.GONE
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

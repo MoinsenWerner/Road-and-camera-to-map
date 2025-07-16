@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:key="pref_sync_enabled"
+        android:title="Synchronisieren der Map-Daten"
+        android:defaultValue="true" />
+
+    <SwitchPreferenceCompat
+        android:key="pref_sync_wifi_only"
+        android:title="Nur bei WLAN synchronisieren"
+        android:defaultValue="false" />
+
+    <ListPreference
+        android:key="pref_theme"
+        android:title="Darstellung"
+        android:entries="@array/theme_entries"
+        android:entryValues="@array/theme_values"
+        android:defaultValue="system" />
+
+    <ListPreference
+        android:key="pref_speed_limit_source"
+        android:title="Geschwindigkeitsbegrenzungen erkennen"
+        android:entries="@array/speed_source_entries"
+        android:entryValues="@array/speed_source_values"
+        android:defaultValue="camera" />
+</PreferenceScreen>

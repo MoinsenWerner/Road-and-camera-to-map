@@ -4,6 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO: add camera preview and speed display -->
+    <!-- TODO: add camera preview -->
+
+    <TextView
+        android:id="@+id/tvSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 km/h"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSpeedLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tvSpeed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/onlineIndicator"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/online_indicator"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/tvSpeedLimit"
+        app:layout_constraintBottom_toBottomOf="@id/tvSpeedLimit"
+        android:layout_marginStart="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
