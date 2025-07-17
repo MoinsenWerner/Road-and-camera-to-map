@@ -1,0 +1,92 @@
+{
+  "version": 8,
+  "name": "Basic",
+  "sources": {
+    "osm": {
+      "type": "raster",
+      "tiles": [
+        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      ],
+      "tileSize": 256
+    }
+  },
+  "layers": [
+    {
+      "id": "osm-layer",
+      "type": "raster",
+      "source": "osm"
+    }
+  ]
+}
+
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+<uses-library android:name="org.maplibre.gl" android:required="false" />
+
+package com.example.preciseroadmap.ui
+
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.location.Location
+import android.util.Log
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import com.google.android.gms.location.*
+import com.mapbox.geojson.Point
+import org.maplibre.android.maps.MapView
+import org.maplibre.android.maps.MapboxMap
+import org.maplibre.android.maps.Style
+import org.maplibre.android.maps.OnMapReadyCallback
+
+@Composable
+fun MapScreen() {
+    val context = LocalContext.current
+
+    AndroidView(factory = {
+        val mapView = MapView(it)
+        mapView.getMapAsync { mapboxMap ->
+            mapboxMap.setStyle(Style.Builder().fromUri("asset://style.json")) {
+                enableLocation(context, mapboxMap)
+            }
+        }
+        mapView.onStart()
+        mapView
+    })
+}
+
+@SuppressLint("MissingPermission")
+fun enableLocation(context: Context, mapboxMap: MapboxMap) {
+    val locationClient = LocationServices.getFusedLocationProviderClient(context)
+
+    val request = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        2000L
+    ).build()
+
+    locationClient.requestLocationUpdates(
+        request,
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                val loc = result.lastLocation ?: return
+                val point = Point.fromLngLat(loc.longitude, loc.latitude)
+                mapboxMap.setCameraPosition(
+                    org.maplibre.android.camera.CameraPosition.Builder()
+                        .target(org.maplibre.android.geometry.LatLng(point.latitude(), point.longitude()))
+                        .zoom(17.0)
+                        .build()
+                )
+            }
+        },
+        ContextCompat.getMainExecutor(context)
+    )
+}
+
+setContent {
+    MapScreen()
+}
+
+./gradlew assembleDebug
